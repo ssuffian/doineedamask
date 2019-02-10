@@ -62,6 +62,11 @@ function initGeolocation() {
 }
  
 function successCallback(position) {
+  let link = (
+    '<a href="http://www.purpleair.com/map#11/' +
+    position.coords.latitude+ '/' + position.coords.longitude + '">Purple Air</a>'
+  )
+  document.getElementById('purpleairlink').innerHTML = link
   loadJson(position.coords.latitude, position.coords.longitude)
 }
 
@@ -104,7 +109,6 @@ function getRecentSensors(sensors, lat, lon){
 }
 
 function getClosestSensor(sensors, lat, lon){
-    console.log('getClosestSensor')
     let distances = []
     sensors.forEach(function(obj){
       distances.push(obj['distance'])
