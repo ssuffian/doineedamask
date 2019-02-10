@@ -42,7 +42,7 @@ function initGeolocation() {
  
 function successCallback(position) {
   let link = (
-    '<a href="http://www.purpleair.com/map#11/' +
+    'See the map at <a href="http://www.purpleair.com/map#11/' +
     position.coords.latitude+ '/' + position.coords.longitude + '">Purple Air</a>.'
   )
   document.getElementById('purpleairlink').innerHTML = link
