@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "browserify -g [ babelify --presets [ \"@babel/preset-env\" ] ] -g uglifyify --entry main.js > bundle.js"
+    "build": "browserify -g [ babelify --presets [ \"@babel/preset-env\" ] ] -g uglifyify --entry main.js > bundle.js",
+    "buildmap": "browserify -g [ babelify --presets [ \"@babel/preset-env\" ] ] -g uglifyify --entry map.js > mapbundle.js"
   },
   "repository": {
     "type": "git",

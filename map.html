@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Do I need an Air Mask?</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/latest/css/ol.css" type="text/css">
+    <style>
+      html, body {
+        margin: 0;
+        height: 100%;
+      }
+      #map {
+        /*position: absolute;*/
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        height: 50%;
+      }
+      #header {
+        height: 50px;
+      }
+      #maskStr {
+        font-size: 30px;
+      }
+      #lastUpdateStr {
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Do you need an air mask today?</h3>
+    <div id="header"></div>
+    <div id="map"></div>
+    Black circle is where you are being geolocated. White circle is the nearest sensor from <span id="purpleairlink"><a href="http://www.purpleair.com">Purple Air</a></span>. Only sensors that have submitted data within the last 24 hours and are installed outside are considered. <br><a href="http://github.com/ssuffian/doineedamask">Github Repo</a>
+    <script src="./mapbundle.js"></script>
+  </body>
+</html>

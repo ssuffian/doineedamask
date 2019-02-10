@@ -16,6 +16,27 @@ import Style from 'ol/style/Style';
 import View from 'ol/View';
 
 init();
+
+// Variables
+var layer = new TileLayer({source: new OSM()});
+const markerSource = new VectorSource();
+
+var map = new Map({
+  layers: [
+    new TileLayer({
+      source: new OSM(),
+    }),
+    new VectorLayer({
+      source: markerSource,
+    }),
+  ],
+  target: 'map',
+  view: new View({
+    center: [0, 0],
+    zoom: 2
+  })
+});
+
 //Functions
 
 function init(){
@@ -43,7 +64,7 @@ function initGeolocation() {
 function successCallback(position) {
   let link = (
     '<a href="http://www.purpleair.com/map#11/' +
-    position.coords.latitude+ '/' + position.coords.longitude + '">Purple Air</a>.'
+    position.coords.latitude+ '/' + position.coords.longitude + '">Purple Air</a>'
   )
   document.getElementById('purpleairlink').innerHTML = link
   loadJson(position.coords.latitude, position.coords.longitude)
@@ -108,6 +129,10 @@ function getClosestSensor(sensors, lat, lon){
       parseFloat(closestSensor['Lon']),
       parseFloat(closestSensor['Lat'])
     ]);
+    console.log(lon, lat)
+    addMarker(positionClosestSensor, 'Sensor', 'white', 15)
+    addMarker(positionHome, 'Home', 'black', 10)
+    map.getView().animate({center: positionHome}, {zoom: 12});
     wearMaskStrUpdate(closestSensor)
 }
 
@@ -129,6 +154,26 @@ function deg2rad(deg) {
   return deg * (Math.PI/180)
 }
 
+function addMarker(position, name, color, radius) {
+
+  let iconFeature = new Feature({
+    geometry: new Point(position),
+    name: name
+  });
+  iconFeature.setStyle(
+    new Style({
+      image: new CircleStyle({
+        radius: radius,
+        fill: new Fill({color: color}),
+        stroke: new Stroke({color: '#bada55', width: 1}),
+        opacity: .5
+      })
+    })
+  );
+
+  markerSource.addFeature(iconFeature);
+}
+    
 function getWorstSensor(sensors){
     console.log('getWorstSensor')
     var sensorValues = []
@@ -156,37 +201,29 @@ function wearMaskStrUpdate(closestSensor){
   if(value <= 50){
     doIWearAMask = 'No'
     airRating = 'Good'
-    document.body.style.backgroundColor = 'green';
   }
   else if(value <= 100){
     doIWearAMask = 'Nah-ish'
     airRating = 'Moderate'
-    document.body.style.backgroundColor = 'orange';
   }
   else if(value <= 150){
     doIWearAMask = 'Maybe'
     airRating = 'Unhealthy for sensitive groups'
-    document.body.style.backgroundColor = 'orange';
   }
   else if(value <= 200){
     doIWearAMask = 'Yes'
     airRating = 'Unhealthy'
-    document.body.style.backgroundColor = 'red';
   }
   else if(value < 250){
     doIWearAMask = 'Yes, and GO INSIDE'
     airRating = 'Very Unhealthy'
-    document.body.style.backgroundColor = 'red';
   }
   else{
     doIWearAMask = 'Yes and GO INSIDE IMMEDIATELY'
     airRating = 'Hazardous'
-    document.body.style.backgroundColor = 'red';
   }
   document.getElementById('header').innerHTML = (
-    "<span id='maskStr'>" + doIWearAMask + "</span>."
-  )
-  document.getElementById('explanation').innerHTML = (
+    "<span id='maskStr'>" + doIWearAMask + "</span>." + 
     " The PM 2.5 Level is " + value + " in " + closestSensor['Label'] + "."+ 
     " Rating: " + airRating + "." +
     " <span id='lastUpdateStr'>Last Update: " + new Date(closestSensor['LastSeen']*1000) + "</span>"
